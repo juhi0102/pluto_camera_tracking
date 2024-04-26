@@ -135,7 +135,7 @@ for packet in drone1.start_video_stream():
             .run(input=packet.frame_bytes, capture_stdout=True, capture_stderr=True)
         )
         frame = np.frombuffer(out, np.uint8)
-        height, width = 576, 1024
+        height, width = 1152, 2048
         frame = frame.reshape((height, width, 3)).copy()  # Make a writable copy of the frame
 
         # Draw grid lines
@@ -144,11 +144,9 @@ for packet in drone1.start_video_stream():
         # Vertical grid lines
         cv2.line(frame, (width // 3, 0), (width // 3, height), grid_color, grid_thickness)
         cv2.line(frame, (2 * width // 3, 0), (2 * width // 3, height), grid_color, grid_thickness)
-
         # Horizontal grid lines
         cv2.line(frame, (0, height // 3), (width, height // 3), grid_color, grid_thickness)
         cv2.line(frame, (0, 2 * height // 3), (width, 2 * height // 3), grid_color, grid_thickness)
-
 
         # Track blue color and control the drone
         drone_controller.track_blue(frame)
