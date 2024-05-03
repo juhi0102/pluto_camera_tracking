@@ -103,15 +103,15 @@ class DroneController:
                     self.drone.rcRoll = 1500
                 
                 if abs(offset_y) > 10:  # Adjust drone's pitch
-                    self.drone.rcThrottle = 1500 + int(offset_y * 0.2)
-                    print("Adjusting pitch:", self.drone.rcThrottle)
+                    self.drone.rcPitch = 1500 + int(offset_y * 0.2)
+                    print("Adjusting pitch:", self.drone.rcPitch)
                 else:  # Centered in Y direction
-                    self.drone.rcThrottle = 1500
+                    self.drone.rcPitch = 1500
         
         # If no contours are found, stop the drone's movements
         else:
             self.drone.rcRoll = 1500
-            self.drone.rcThrottle = 1500
+            self.drone.rcPitch = 1500
 
 # Initialize drone controller
 drone_controller = DroneController()
