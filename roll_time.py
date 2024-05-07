@@ -15,7 +15,7 @@ class DroneController:
     def __init__(self):
         # Initialize Pluto drone object
         self.drone = pluto()
-        self.movement_detected_time = None 
+        
         
     def mapping(self, value, in_min, in_max, out_min, out_max):
         return int((value - in_min) * (out_max - out_min) / (in_max - in_min) + out_min)
@@ -65,10 +65,6 @@ class DroneController:
         with keyboard.Listener(on_press=on_press, on_release=on_release) as key_listener:
             key_listener.join()
 
-    
-       
-
-    
 
     def track_blue(self, frame):
         # Convert frame to HSV color space
@@ -103,26 +99,36 @@ class DroneController:
                 offset_y = cy - frame.shape[0] // 2
                 
                 # Control the drone based on centroid position
-                if abs(offset_x) > 10:  # Adjust drone's roll
-                    self.drone.rcRoll = 1500 + int(offset_x * 0.2)
-                    print("Adjusting roll:", self.drone.rcRoll)
-                    self.movement_detected_time = time.time()  # Update movement detection time
-                else:  # Centered in X direction
-                    self.drone.rcRoll = 1500
-                
-                if abs(offset_y) > 10:  # Adjust drone's pitch
-                    self.drone.rcPitch = 1500 + int(offset_y * 0.2)
-                    print("Adjusting pitch:", self.drone.rcPitch)
-                    self.movement_detected_time = time.time()  # Update movement detection time
-                else:  # Centered in Y direction
-                    self.drone.rcPitch = 1500
-        
-        # Check if 1 second has elapsed since movement detection
-        if self.movement_detected_time is not None and time.time() - self.movement_detected_time >= 1:
-            # Stop drone's movement after 1 second
-            self.drone.rcRoll = 1500  # Stop rolling
-            self.drone.rcPitch = 1500  # Stop pitching
-            self.movement_detected_time = None  # Reset the movement detection time
+                # Assuming this block of code is inside a loop or a function that continuously checks for object movement
+        if abs(offset_x) > 10:  # Adjust drone's roll
+            self.drone.rcRoll = 1500 + int(offset_x * 0.2)
+            print("Adjusting roll:", self.drone.rcRoll)
+            time.sleep(2)  # Wait for 2 seconds to allow drone to adjust roll
+
+            # After adjusting roll, hover for 2 seconds to hold position
+            print("Hovering to hold position")
+            time.sleep(2)  # Hover for 2 seconds
+
+            # Reset roll to stop movement after hovering
+            self.drone.rcRoll = 1500
+        else:  # Centered in X direction
+            self.drone.rcRoll = 1500
+
+        if abs(offset_y) > 10:  # Adjust drone's pitch
+            self.drone.rcPitch = 1500 + int(offset_y * 0.2)
+            print("Adjusting pitch:", self.drone.rcPitch)
+            time.sleep(2) # Wait for 2 seconds to allow drone to adjust pitch
+
+            # After adjusting pitch, hover for 2 seconds to hold position
+            print("Hovering to hold position")
+            time.sleep(2)  # Hover for 2 seconds
+
+            # Reset pitch to stop movement after hovering
+            self.drone.rcPitch = 1500
+        else:  # Centered in Y direction
+            self.drone.rcPitch = 1500
+
+            
 
 # Initialize drone controller
 drone_controller = DroneController()
